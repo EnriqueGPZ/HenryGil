@@ -4,22 +4,22 @@
 const galleryConfig = {
     original: {
         folder: 'grid',
-        count: 48,
+        count: 40,
         prefix: 'grid'
     },
     el: {
         folder: 'grid_el',
-        count: 15,
+        count: 40,
         prefix: 'el'
     },
     ella: {
         folder: 'grid_ella',
-        count: 18,
+        count: 40,
         prefix: 'ella'
     },
     detalles: {
         folder: 'grid_detalles',
-        count: 22,
+        count: 40,
         prefix: 'detalles'
     }
 };
