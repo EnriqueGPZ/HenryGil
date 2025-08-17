@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Henry Gil - Fotógrafo de Bodas</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Josefin+Sans:wght@300&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS INTEGRADO -->
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%; 
+            overflow: hidden; 
+            background-color: #ffffff;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideUpFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        #welcome-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #ffffff; 
+            z-index: 100;
+            transition: all 1.2s cubic-bezier(0.19, 1, 0.22, 1);
+            cursor: pointer;
+            padding: 30px;
+            box-sizing: border-box;
+        }
+
+        .welcome-text {
+            text-align: center;
+            transition: transform 1.2s cubic-bezier(0.19, 1, 0.22, 1), text-align 1.2s ease;
+        }
+
+        .logo {
+            width: 35vw;
+            max-width: 450px;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+            opacity: 0;
+            animation: fadeIn 1s ease-out 0.2s forwards;
+            transition: width 1.2s cubic-bezier(0.19, 1, 0.22, 1), filter 0.3s ease-in, margin 1.2s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        .welcome-text h2 {
+            font-family: 'Josefin Sans', sans-serif;
+            font-weight: 300;
+            font-size: 1vw;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            margin-top: 20px;
+            color: #000000;
+            opacity: 0;
+            animation: slideUpFadeIn 1s cubic-bezier(0.19, 1, 0.22, 1) 0.7s forwards;
+            transition: font-size 1.2s cubic-bezier(0.19, 1, 0.22, 1), letter-spacing 1.2s cubic-bezier(0.19, 1, 0.22, 1), color 0.3s ease-in, margin-top 1.2s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        #welcome-screen.animating {
+            background-color: transparent;
+        }
+        #welcome-screen.animating .welcome-text {
+            mix-blend-mode: difference;
+        }
+        #welcome-screen.animating .logo {
+             filter: invert(1);
+        }
+        #welcome-screen.animating .welcome-text h2 {
+            color: #ffffff;
+        }
+        
+        #welcome-screen.header-mode {
+            height: auto;
+            background-color: transparent;
+            justify-content: flex-start;
+            align-items: flex-start;
+            cursor: default;
+            pointer-events: none; 
+        }
+        #welcome-screen.header-mode .welcome-text {
+            pointer-events: auto;
+        }
+
+        #welcome-screen.header-mode .welcome-text {
+            text-align: left;
+        }
+        #welcome-screen.header-mode .logo {
+            width: 150px;
+            margin: 0;
+        }
+        #welcome-screen.header-mode .welcome-text h2 {
+            opacity: 1; 
+            font-size: 10px;
+            letter-spacing: 4px;
+            margin-top: 8px;
+            animation: none;
+        }
+
+        #photo-gallery {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 0;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0; 
+        }
+
+        .gallery-item {
+            aspect-ratio: 3 / 4;
+            overflow: hidden;
+            opacity: 0;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        #photo-gallery.visible .gallery-item {
+            opacity: 1;
+            transform: none;
+        }
+        
+        .gallery-item:nth-child(1) {
+            transform: translate(-100vw, 50vh) scale(1.8) rotate(-25deg);
+            transition: transform 1.2s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.5s;
+        }
+        .gallery-item:nth-child(2) {
+            transform: translateY(150vh) scale(2.5);
+            transition: transform 1.5s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.5s;
+        }
+        .gallery-item:nth-child(3) {
+            transform: translate(100vw, 20vh) scale(1.5) rotate(20deg);
+            transition: transform 1.3s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.5s;
+        }
+        .gallery-item:nth-child(3n+4) {
+            transform: translate(-50vw, 20vh) rotate(-15deg);
+            transition: transform 1.5s cubic-bezier(0.19, 1, 0.22, 1) 0.5s, opacity 1s 0.5s;
+        }
+        .gallery-item:nth-child(3n+5) {
+            transform: translateY(50vh) scale(1.5);
+            transition: transform 1.5s cubic-bezier(0.19, 1, 0.22, 1) 0.6s, opacity 1s 0.6s;
+        }
+        .gallery-item:nth-child(3n+6) {
+            transform: translate(50vw, 25vh) rotate(15deg);
+            transition: transform 1.5s cubic-bezier(0.19, 1, 0.22, 1) 0.7s, opacity 1s 0.7s;
+        }
+        
+        #menu-fixed {
+            position: fixed;
+            top: 130px;
+            right: 30px;
+            z-index: 101;
+            transform: rotate(90deg);
+            transform-origin: top right;
+            font-family: 'Anton', sans-serif;
+            font-size: 22px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #ffffff;
+            text-decoration: none;
+            mix-blend-mode: difference;
+            opacity: 0;
+            transition: opacity 1s ease 0.5s, letter-spacing 0.3s ease;
+        }
+        #menu-fixed.visible {
+            opacity: 1;
+        }
+        #menu-fixed:hover {
+            letter-spacing: 4px;
+        }
+
+        #contact-fixed {
+            position: fixed;
+            bottom: 10px;
+            right: 30px;
+            z-index: 101; 
+            transform: rotate(90deg);
+            transform-origin: top right;
+            font-family: 'Anton', sans-serif;
+            font-size: 22px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #ffffff;
+            text-decoration: none;
+            mix-blend-mode: difference;
+            opacity: 0;
+            transition: opacity 1s ease 0.5s, letter-spacing 0.3s ease;
+        }
+        #contact-fixed.visible {
+            opacity: 1;
+        }
+        #contact-fixed:hover {
+            letter-spacing: 4px;
+        }
+
+        #menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #ffffff;
+            z-index: 200;
+            transform: translateX(100%);
+            transition: transform 0.8s cubic-bezier(0.86, 0, 0.07, 1);
+        }
+        #menu-overlay.open {
+            transform: translateX(0%);
+        }
+        #menu-overlay iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        #menu-close-button {
+            position: fixed;
+            top: 130px;
+            right: 30px;
+            z-index: 201;
+            transform: rotate(90deg);
+            transform-origin: top right;
+            font-family: 'Anton', sans-serif;
+            font-size: 22px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #ffffff;
+            mix-blend-mode: difference;
+            text-decoration: none;
+            transition: letter-spacing 0.3s ease;
+            cursor: pointer;
+        }
+        #menu-close-button:hover {
+            letter-spacing: 4px;
+        }
+
+        #contact-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #ffffff;
+            z-index: 200;
+            transform: translateX(-100%);
+            transition: transform 0.8s cubic-bezier(0.86, 0, 0.07, 1);
+        }
+        #contact-overlay.open {
+            transform: translateX(0%);
+        }
+        #contact-overlay iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        #contact-close-button {
+            position: fixed;
+            bottom: 10px;
+            right: 30px;
+            z-index: 201;
+            transform: rotate(90deg);
+            transform-origin: top right;
+            font-family: 'Anton', sans-serif;
+            font-size: 22px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #ffffff;
+            mix-blend-mode: difference;
+            text-decoration: none;
+            transition: letter-spacing 0.3s ease;
+            cursor: pointer;
+        }
+        #contact-close-button:hover {
+            letter-spacing: 4px;
+        }
+
+        /* --- NUEVO CSS PARA EL OVERLAY DE FAQ --- */
+        #faq-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #ffffff;
+            z-index: 200;
+            transform: translateX(-100%); /* Igual que contacto, para que entre por la izquierda */
+            transition: transform 0.8s cubic-bezier(0.86, 0, 0.07, 1);
+        }
+        #faq-overlay.open {
+            transform: translateX(0%);
+        }
+        #faq-overlay iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        #faq-close-button {
+            position: fixed;
+            bottom: 10px; /* Lo ponemos abajo como el de contacto */
+            right: 30px;
+            z-index: 201;
+            transform: rotate(90deg);
+            transform-origin: top right;
+            font-family: 'Anton', sans-serif;
+            font-size: 22px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #ffffff;
+            mix-blend-mode: difference;
+            text-decoration: none;
+            transition: letter-spacing 0.3s ease;
+            cursor: pointer;
+        }
+        #faq-close-button:hover {
+            letter-spacing: 4px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="welcome-screen">
+        <div class="welcome-text">
+            <img src="logo.png" alt="Logo Henry Gil" class="logo">
+            <h2>fotógrafo de bodas</h2>
+        </div>
+    </div>
+
+    <div id="photo-gallery">
+        <div class="gallery-grid">
+            <!-- Rellena con tus 48 imágenes -->
+            <div class="gallery-item"><img src="grid/grid01.webp" alt="Foto de boda 1"></div>
+            <div class="gallery-item"><img src="grid/grid02.webp" alt="Foto de boda 2"></div>
+            <div class="gallery-item"><img src="grid/grid03.webp" alt="Foto de boda 3"></div>
+            <div class="gallery-item"><img src="grid/grid04.webp" alt="Foto de boda 4"></div>
+            <div class="gallery-item"><img src="grid/grid05.webp" alt="Foto de boda 5"></div>
+            <div class="gallery-item"><img src="grid/grid06.webp" alt="Foto de boda 6"></div>
+            <div class="gallery-item"><img src="grid/grid07.webp" alt="Foto de boda 7"></div>
+            <div class="gallery-item"><img src="grid/grid08.webp" alt="Foto de boda 8"></div>
+            <div class="gallery-item"><img src="grid/grid09.webp" alt="Foto de boda 9"></div>
+            <div class="gallery-item"><img src="grid/grid10.webp" alt="Foto de boda 10"></div>
+            <div class="gallery-item"><img src="grid/grid11.webp" alt="Foto de boda 11"></div>
+            <div class="gallery-item"><img src="grid/grid12.webp" alt="Foto de boda 12"></div>
+            <div class="gallery-item"><img src="grid/grid13.webp" alt="Foto de boda 13"></div>
+            <div class="gallery-item"><img src="grid/grid14.webp" alt="Foto de boda 14"></div>
+            <div class="gallery-item"><img src="grid/grid15.webp" alt="Foto de boda 15"></div>
+            <div class="gallery-item"><img src="grid/grid16.webp" alt="Foto de boda 16"></div>
+            <div class="gallery-item"><img src="grid/grid17.webp" alt="Foto de boda 17"></div>
+            <div class="gallery-item"><img src="grid/grid18.webp" alt="Foto de boda 18"></div>
+            <div class="gallery-item"><img src="grid/grid19.webp" alt="Foto de boda 19"></div>
+            <div class="gallery-item"><img src="grid/grid20.webp" alt="Foto de boda 20"></div>
+            <div class="gallery-item"><img src="grid/grid21.webp" alt="Foto de boda 21"></div>
+            <div class="gallery-item"><img src="grid/grid22.webp" alt="Foto de boda 22"></div>
+            <div class="gallery-item"><img src="grid/grid23.webp" alt="Foto de boda 23"></div>
+            <div class="gallery-item"><img src="grid/grid24.webp" alt="Foto de boda 24"></div>
+            <div class="gallery-item"><img src="grid/grid25.webp" alt="Foto de boda 25"></div>
+            <div class="gallery-item"><img src="grid/grid26.webp" alt="Foto de boda 26"></div>
+            <div class="gallery-item"><img src="grid/grid27.webp" alt="Foto de boda 27"></div>
+            <div class="gallery-item"><img src="grid/grid28.webp" alt="Foto de boda 28"></div>
+            <div class="gallery-item"><img src="grid/grid29.webp" alt="Foto de boda 29"></div>
+            <div class="gallery-item"><img src="grid/grid30.webp" alt="Foto de boda 30"></div>
+            <div class="gallery-item"><img src="grid/grid31.webp" alt="Foto de boda 31"></div>
+            <div class="gallery-item"><img src="grid/grid32.webp" alt="Foto de boda 32"></div>
+            <div class="gallery-item"><img src="grid/grid33.webp" alt="Foto de boda 33"></div>
+            <div class="gallery-item"><img src="grid/grid34.webp" alt="Foto de boda 34"></div>
+            <div class="gallery-item"><img src="grid/grid35.webp" alt="Foto de boda 35"></div>
+            <div class="gallery-item"><img src="grid/grid36.webp" alt="Foto de boda 36"></div>
+            <div class="gallery-item"><img src="grid/grid37.webp" alt="Foto de boda 37"></div>
+            <div class="gallery-item"><img src="grid/grid38.webp" alt="Foto de boda 38"></div>
+            <div class="gallery-item"><img src="grid/grid39.webp" alt="Foto de boda 39"></div>
+            <div class="gallery-item"><img src="grid/grid40.webp" alt="Foto de boda 40"></div>
+            <div class="gallery-item"><img src="grid/grid41.webp" alt="Foto de boda 41"></div>
+            <div class="gallery-item"><img src="grid/grid42.webp" alt="Foto de boda 42"></div>
+            <div class="gallery-item"><img src="grid/grid43.webp" alt="Foto de boda 43"></div>
+            <div class="gallery-item"><img src="grid/grid44.webp" alt="Foto de boda 44"></div>
+            <div class="gallery-item"><img src="grid/grid45.webp" alt="Foto de boda 45"></div>
+            <div class="gallery-item"><img src="grid/grid46.webp" alt="Foto de boda 46"></div>
+            <div class="gallery-item"><img src="grid/grid47.webp" alt="Foto de boda 47"></div>
+            <div class="gallery-item"><img src="grid/grid48.webp" alt="Foto de boda 48"></div>
+        </div>
+    </div>
+
+    <a href="#" id="menu-fixed">MENU</a>
+    <a href="#" id="contact-fixed">CONTACTO</a>
+
+    <div id="menu-overlay">
+        <a href="#" id="menu-close-button">CERRAR</a>
+        <iframe src="menu.html" title="Menú de navegación"></iframe>
+    </div>
+    
+    <div id="contact-overlay">
+        <a href="#" id="contact-close-button">CERRAR</a>
+        <iframe src="contacto.html" title="Página de contacto"></iframe>
+    </div>
+
+    <!-- --- NUEVO OVERLAY DE FAQ --- -->
+    <div id="faq-overlay">
+        <a href="#" id="faq-close-button">CERRAR</a>
+        <iframe src="faq.html" title="Página de Preguntas Frecuentes"></iframe>
+    </div>
+
+    <!-- JAVASCRIPT INTEGRADO (ACTUALIZADO) -->
+    <script>
+        // Esta función será llamada desde los iframes (menu.html)
+        function handleFrameNavigation(target) {
+            const menuOverlay = document.getElementById('menu-overlay');
+            const contactOverlay = document.getElementById('contact-overlay');
+            const faqOverlay = document.getElementById('faq-overlay');
+
+            // Primero, cerramos el menú
+            menuOverlay.classList.remove('open');
+
+            // Esperamos un poco para que la animación de cierre del menú comience
+            // antes de abrir el nuevo overlay. Esto da un efecto más suave.
+            setTimeout(() => {
+                if (target === 'contact') {
+                    contactOverlay.classList.add('open');
+                } else if (target === 'faq') {
+                    faqOverlay.classList.add('open');
+                }
+                // Si el target es 'portfolio', no hacemos nada más,
+                // solo se habrá cerrado el menú, que es lo que queremos.
+            }, 300); // 300ms de retraso
+        }
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const welcomeScreen = document.getElementById('welcome-screen');
+            const photoGallery = document.getElementById('photo-gallery');
+            const contactFixed = document.getElementById('contact-fixed');
+            const menuFixed = document.getElementById('menu-fixed');
+            
+            // Overlays y sus botones de cierre
+            const menuOverlay = document.getElementById('menu-overlay');
+            const menuCloseButton = document.getElementById('menu-close-button');
+            const contactOverlay = document.getElementById('contact-overlay');
+            const contactCloseButton = document.getElementById('contact-close-button');
+            const faqOverlay = document.getElementById('faq-overlay'); // Nuevo
+            const faqCloseButton = document.getElementById('faq-close-button'); // Nuevo
+
+            const startAnimation = () => {
+                photoGallery.classList.add('visible');
+                welcomeScreen.classList.add('animating');
+                welcomeScreen.classList.add('header-mode');
+                document.body.style.overflow = 'auto';
+                contactFixed.classList.add('visible');
+                menuFixed.classList.add('visible');
+            };
+
+            window.addEventListener('click', startAnimation, { once: true });
+
+            // Abrir overlays desde los botones principales
+            menuFixed.addEventListener('click', (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                menuOverlay.classList.add('open');
+            });
+            contactFixed.addEventListener('click', (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                contactOverlay.classList.add('open');
+            });
+
+            // Cerrar overlays
+            menuCloseButton.addEventListener('click', (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                menuOverlay.classList.remove('open');
+            });
+            contactCloseButton.addEventListener('click', (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                contactOverlay.classList.remove('open');
+            });
+            faqCloseButton.addEventListener('click', (event) => { // Nuevo
+                event.preventDefault();
+                event.stopPropagation();
+                faqOverlay.classList.remove('open');
+            });
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menú - Henry Gil</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
+
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000000;
+            color: #ffffff;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 300;
+        }
+
+        .menu-container {
+            display: flex;
+            align-items: center;
+            min-height: 100vh;
+            padding: 5vw;
+            box-sizing: border-box;
+        }
+
+        .menu-wrapper {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .menu-info {
+            flex: 1 1 40%;
+            min-width: 300px;
+            padding-right: 3vw;
+            box-sizing: border-box;
+        }
+
+        .menu-info h1 {
+            font-size: 6vw;
+            font-weight: 700;
+            margin: 0;
+            line-height: 1.1;
+        }
+        
+        .social-links {
+            margin-top: 40px;
+        }
+
+        .social-links a {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 400;
+            color: #a0a0a0;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            transition: color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: #ffffff;
+        }
+
+        .menu-nav {
+            flex: 1 1 60%;
+            min-width: 300px;
+        }
+
+        .menu-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .menu-nav li {
+            margin-bottom: 20px;
+        }
+
+        .menu-nav a {
+            font-size: 4vw;
+            font-weight: 700;
+            text-decoration: none;
+            color: #ffffff;
+            transition: color 0.3s ease;
+            display: inline-block;
+            cursor: pointer; /* Añadido para que parezca un enlace */
+        }
+
+        .menu-nav a:hover {
+            color: #888888;
+        }
+
+        @media (max-width: 900px) {
+            .menu-wrapper {
+                flex-direction: column;
+                align-items: flex-start;
+                text-align: left;
+            }
+            .menu-info {
+                margin-bottom: 60px;
+            }
+            .menu-info h1, .menu-nav a {
+                font-size: 12vw;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="menu-container">
+        <div class="menu-wrapper">
+            <div class="menu-info">
+                <h1>Henry Gil</h1>
+                <div class="social-links">
+                    <a href="https://instagram.com" target="_blank">Instagram</a>
+                    <a href="https://pinterest.com" target="_blank">Pinterest</a>
+                </div>
+            </div>
+            <nav class="menu-nav">
+                <ul>
+                    <!-- 
+                      - El atributo href se ha quitado. El estilo del cursor hace que parezca un enlace.
+                      - onclick llama a la función en la página padre (index.html).
+                      - Le pasamos un identificador ('portfolio', 'faq', 'contact').
+                      - return false; previene cualquier comportamiento por defecto.
+                    -->
+                    <li><a onclick="window.parent.handleFrameNavigation('portfolio'); return false;">BODAS/PORTFOLIO</a></li>
+                    <li><a onclick="window.parent.handleFrameNavigation('faq'); return false;">FAQ</a></li>
+                    <li><a onclick="window.parent.handleFrameNavigation('contact'); return false;">CONTACTO</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</body>
+</html>
