@@ -305,7 +305,6 @@
             letter-spacing: 4px;
         }
 
-        /* --- NUEVO CSS PARA EL OVERLAY DE FAQ --- */
         #faq-overlay {
             position: fixed;
             top: 0;
@@ -314,7 +313,7 @@
             height: 100%;
             background-color: #ffffff;
             z-index: 200;
-            transform: translateX(-100%); /* Igual que contacto, para que entre por la izquierda */
+            transform: translateX(-100%);
             transition: transform 0.8s cubic-bezier(0.86, 0, 0.07, 1);
         }
         #faq-overlay.open {
@@ -327,7 +326,7 @@
         }
         #faq-close-button {
             position: fixed;
-            bottom: 10px; /* Lo ponemos abajo como el de contacto */
+            bottom: 10px;
             right: 30px;
             z-index: 201;
             transform: rotate(90deg);
@@ -424,7 +423,6 @@
         <iframe src="contacto.html" title="Página de contacto"></iframe>
     </div>
 
-    <!-- --- NUEVO OVERLAY DE FAQ --- -->
     <div id="faq-overlay">
         <a href="#" id="faq-close-button">CERRAR</a>
         <iframe src="faq.html" title="Página de Preguntas Frecuentes"></iframe>
@@ -466,10 +464,26 @@
             const menuCloseButton = document.getElementById('menu-close-button');
             const contactOverlay = document.getElementById('contact-overlay');
             const contactCloseButton = document.getElementById('contact-close-button');
-            const faqOverlay = document.getElementById('faq-overlay'); // Nuevo
-            const faqCloseButton = document.getElementById('faq-close-button'); // Nuevo
+            const faqOverlay = document.getElementById('faq-overlay');
+            const faqCloseButton = document.getElementById('faq-close-button');
+
+            // --- LÓGICA DE INICIO AUTOMÁTICO Y CON CLIC ---
+
+            let animationTriggered = false; // Una bandera para asegurar que la animación solo se ejecute una vez.
+            let autoStartTimer; // Variable para guardar nuestro temporizador.
 
             const startAnimation = () => {
+                // Si la animación ya se disparó (por clic o por tiempo), no hacemos nada.
+                if (animationTriggered) return;
+                
+                animationTriggered = true; // Marcamos que la animación ha comenzado.
+
+                // Limpiamos el temporizador (por si el clic fue lo que inició esto).
+                clearTimeout(autoStartTimer);
+                // Quitamos el listener del clic (por si el temporizador fue lo que inició esto).
+                window.removeEventListener('click', startAnimation);
+
+                // El resto del código de la animación es el mismo.
                 photoGallery.classList.add('visible');
                 welcomeScreen.classList.add('animating');
                 welcomeScreen.classList.add('header-mode');
@@ -478,7 +492,14 @@
                 menuFixed.classList.add('visible');
             };
 
-            window.addEventListener('click', startAnimation, { once: true });
+            // 1. Escuchamos el primer clic del usuario
+            window.addEventListener('click', startAnimation);
+
+            // 2. Creamos un temporizador que ejecutará la animación después de 2 segundos.
+            autoStartTimer = setTimeout(startAnimation, 2000); // 2000 milisegundos = 2 segundos
+
+            // --- FIN DE LA LÓGICA DE INICIO ---
+
 
             // Abrir overlays desde los botones principales
             menuFixed.addEventListener('click', (event) => {
@@ -503,7 +524,7 @@
                 event.stopPropagation();
                 contactOverlay.classList.remove('open');
             });
-            faqCloseButton.addEventListener('click', (event) => { // Nuevo
+            faqCloseButton.addEventListener('click', (event) => {
                 event.preventDefault();
                 event.stopPropagation();
                 faqOverlay.classList.remove('open');
