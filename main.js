@@ -2,11 +2,53 @@
 // CONFIGURACIÓN DE LAS GALERÍAS
 // =================================================================================
 const galleryConfig = {
-    original: {
-        folder: 'grid',
-        count: 40,
-        prefix: 'grid'
-    },
+    // La galería 'original' tiene la estructura con videos
+    original: [
+        { type: 'image', path: 'grid/grid01.webp' },
+        { type: 'image', path: 'grid/grid02.webp' },
+        { type: 'video', path: 'videos/clip01.mp4' },
+        { type: 'image', path: 'grid/grid03.webp' },
+        { type: 'image', path: 'grid/grid04.webp' },
+        { type: 'image', path: 'grid/grid05.webp' },
+        { type: 'image', path: 'grid/grid06.webp' },
+        { type: 'image', path: 'grid/grid07.webp' },
+        { type: 'video', path: 'videos/clip02.mp4' },
+        { type: 'image', path: 'grid/grid08.webp' },
+        { type: 'image', path: 'grid/grid09.webp' },
+        { type: 'image', path: 'grid/grid10.webp' },
+        { type: 'image', path: 'grid/grid11.webp' },
+        { type: 'image', path: 'grid/grid12.webp' },
+        { type: 'image', path: 'grid/grid13.webp' },
+        { type: 'image', path: 'grid/grid14.webp' },
+        { type: 'image', path: 'grid/grid15.webp' },
+        { type: 'image', path: 'grid/grid16.webp' },
+        { type: 'image', path: 'grid/grid17.webp' },
+        { type: 'image', path: 'grid/grid18.webp' },
+        { type: 'image', path: 'grid/grid19.webp' },
+        { type: 'image', path: 'grid/grid20.webp' },
+        { type: 'image', path: 'grid/grid21.webp' },
+        { type: 'image', path: 'grid/grid22.webp' },
+        { type: 'image', path: 'grid/grid23.webp' },
+        { type: 'image', path: 'grid/grid24.webp' },
+        { type: 'image', path: 'grid/grid25.webp' },
+        { type: 'image', path: 'grid/grid26.webp' },
+        { type: 'image', path: 'grid/grid27.webp' },
+        { type: 'image', path: 'grid/grid28.webp' },
+        { type: 'image', path: 'grid/grid29.webp' },
+        { type: 'image', path: 'grid/grid30.webp' },
+        { type: 'image', path: 'grid/grid31.webp' },
+        { type: 'image', path: 'grid/grid32.webp' },
+        { type: 'image', path: 'grid/grid33.webp' },
+        { type: 'image', path: 'grid/grid34.webp' },
+        { type: 'video', path: 'videos/clip03.mp4' },
+        { type: 'image', path: 'grid/grid35.webp' },
+        { type: 'image', path: 'grid/grid36.webp' },
+        { type: 'image', path: 'grid/grid37.webp' },
+        { type: 'image', path: 'grid/grid38.webp' },
+        { type: 'image', path: 'grid/grid39.webp' },
+        { type: 'image', path: 'grid/grid40.webp' },
+    ],
+    // Las demás galerías vuelven a su configuración original de solo fotos
     el: {
         folder: 'grid_el',
         count: 40,
@@ -25,7 +67,7 @@ const galleryConfig = {
 };
 
 // =================================================================================
-// LÓGICA DE LA APLICACIÓN (No necesitas tocar nada de aquí para abajo)
+// LÓGICA DE LA APLICACIÓN
 // =================================================================================
 
 function generateImagePaths(config) {
@@ -78,9 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
         welcomeScreen.classList.add('header-mode');
         document.body.style.overflow = 'auto';
         
-        // ESTA PARTE ES LA QUE HACE QUE APAREZCAN TODOS A LA VEZ
         contactFixed.classList.add('visible');
-
         menuFixed.classList.add('visible');
         filterContainer.classList.add('visible');
     };
@@ -90,19 +130,45 @@ document.addEventListener('DOMContentLoaded', () => {
     const loadNewGrid = (category) => {
         const config = galleryConfig[category];
         if (!config) return;
-        const newImagePaths = generateImagePaths(config);
-        if (newImagePaths.length === 0) return;
 
         galleryGrid.style.opacity = '0';
         setTimeout(() => {
             galleryItems.forEach((item, index) => {
-                const imageIndexToUse = index % newImagePaths.length;
-                const imagePath = newImagePaths[imageIndexToUse];
-                
                 const imgElement = item.querySelector('img');
-                imgElement.src = imagePath;
-                imgElement.alt = `Foto de ${category} ${index + 1}`;
-                item.style.display = 'block'; 
+                const videoElement = item.querySelector('video');
+
+                // Lógica condicional para manejar diferentes tipos de configuración
+                if (Array.isArray(config)) {
+                    // Si es un array, es la galería 'original' con fotos y videos
+                    const mediaConfig = config[index];
+                    if (mediaConfig) {
+                        if (mediaConfig.type === 'video') {
+                            videoElement.src = mediaConfig.path;
+                            videoElement.style.display = 'block';
+                            imgElement.style.display = 'none';
+                        } else {
+                            imgElement.src = mediaConfig.path;
+                            imgElement.alt = `Foto de ${category} ${index + 1}`;
+                            imgElement.style.display = 'block';
+                            videoElement.style.display = 'none';
+                        }
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                } else {
+                    // Si no es un array, es una galería de solo fotos
+                    const imagePath = generateImagePaths(config)[index];
+                    if (imagePath) {
+                        imgElement.src = imagePath;
+                        imgElement.alt = `Foto de ${category} ${index + 1}`;
+                        imgElement.style.display = 'block';
+                        videoElement.style.display = 'none';
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                }
             });
             galleryGrid.style.opacity = '1';
         }, 350);
