@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organizador de Fotos (Estilo Masonry)</title>
+
+    <!-- 1. ESTILOS CSS -->
+    <style>
+        :root {
+            --primary-color: #0052cc;
+            --primary-hover-color: #0065ff;
+            --danger-color: #de350b;
+            --danger-hover-color: #bf2600;
+            --border-color: #dfe1e6;
+            --background-light: #f4f5f7;
+            --background-white: #ffffff;
+            --text-dark: #172b4d;
+            --text-light: #5e6c84;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--background-light);
+            margin: 0;
+            padding: 20px;
+            color: var(--text-dark);
+        }
+
+        h1 {
+            text-align: center;
+            color: #091e42;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .controles {
+            background-color: var(--background-white);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px var(--shadow-color);
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .controles label, .controles input, .controles select, .controles button {
+            font-size: 16px;
+            padding: 10px 15px;
+            border-radius: 5px;
+            border: 1px solid var(--border-color);
+            background-color: var(--background-light);
+        }
+
+        .controles label {
+            border: none;
+            padding-right: 0;
+            background-color: transparent;
+        }
+        
+        .controles input[type="number"] {
+            width: 80px;
+        }
+        
+        #subir-fotos-label {
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        #subir-fotos-label:hover { background-color: #e9ecef; }
+        
+        input[type="file"] { display: none; }
+
+        .controles button {
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #exportar-fotos { background-color: var(--primary-color); }
+        #exportar-fotos:hover:not(:disabled) { background-color: var(--primary-hover-color); }
+
+        #limpiar-todo { background-color: var(--danger-color); }
+        #limpiar-todo:hover:not(:disabled) { background-color: var(--danger-hover-color); }
+        
+        .controles button:disabled {
+            background-color: #a5adba;
+            cursor: not-allowed;
+        }
+
+        #contador-fotos {
+            font-size: 14px;
+            color: var(--text-light);
+            background-color: transparent;
+            border: none;
+            padding-left: 10px;
+        }
+
+        .mosaico {
+            display: grid;
+            gap: 15px;
+            padding: 20px;
+            background-color: var(--background-white);
+            border-radius: 8px;
+            box-shadow: 0 4px 8px var(--shadow-color);
+            min-height: 150px;
+            transition: border-color 0.2s ease;
+            border: 2px dashed transparent;
+            align-items: start;
+            grid-auto-rows: 10px;
+        }
+
+        .mosaico.drag-over {
+            border-color: var(--primary-color);
+            background-color: #e9f2ff;
+        }
+
+        .mosaico-item {
+            position: relative;
+            cursor: move;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px var(--shadow-color);
+        }
+
+        .mosaico-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+            vertical-align: middle;
+        }
+        
+        /* --- ESTILOS MEJORADOS PARA EL BOTÓN DE ELIMINAR (X) --- */
+        .btn-eliminar {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .mosaico-item:hover .btn-eliminar {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        .btn-eliminar:hover {
+            background: white;
+            transform: scale(1.1);
+        }
+
+        /* Las dos líneas que forman la "X" */
+        .btn-eliminar::before,
+        .btn-eliminar::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 14px; /* Ancho de la línea */
+            height: 2px;  /* Grosor de la línea */
+            background-color: var(--text-dark);
+            border-radius: 2px;
+        }
+
+        .btn-eliminar::before {
+            transform: translate(-50%, -50%) rotate(45deg);
+        }
+
+        .btn-eliminar::after {
+            transform: translate(-50%, -50%) rotate(-45deg);
+        }
+        
+        .sortable-ghost {
+            opacity: 0.4;
+            background-color: #cce5ff;
+            border: 2px dashed var(--primary-color);
+        }
+        
+        .mosaico-placeholder {
+            grid-column: 1 / -1;
+            text-align: center;
+            color: var(--text-light);
+            padding: 50px;
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Organizador de Fotos (Estilo Masonry)</h1>
+
+        <div class="controles">
+            <label for="subir-fotos" id="subir-fotos-label">Añadir Imágenes (.webp, .jpg, .png)</label>
+            <input type="file" id="subir-fotos" multiple accept="image/webp, image/jpeg, image/png">
+            
+            <label for="num-columnas">Columnas:</label>
+            <input type="number" id="num-columnas" value="4" min="2" max="10">
+
+            <select id="prefijo">
+                <option value="el">el</option>
+                <option value="ella">ella</option>
+                <option value="detalles">detalles</option>
+                <option value="grid">grid</option>
+            </select>
+            
+            <button id="exportar-fotos">Exportar a .ZIP</button>
+            <button id="limpiar-todo">Limpiar Todo</button>
+            <span id="contador-fotos">0 imágenes</span>
+        </div>
+
+        <div id="mosaico-fotos" class="mosaico">
+            <!-- El placeholder se añadirá dinámicamente con JS -->
+        </div>
+    </div>
+
+    <!-- 2. LIBRERÍAS EXTERNAS -->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+    <!-- 3. LÓGICA DE JAVASCRIPT -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const subirFotosInput = document.getElementById('subir-fotos');
+            const mosaicoFotos = document.getElementById('mosaico-fotos');
+            const prefijoSelect = document.getElementById('prefijo');
+            const exportarFotosBtn = document.getElementById('exportar-fotos');
+            const numColumnasInput = document.getElementById('num-columnas');
+            const limpiarTodoBtn = document.getElementById('limpiar-todo');
+            const contadorFotos = document.getElementById('contador-fotos');
+            const placeholderHTML = `<div class="mosaico-placeholder">Arrastra tus imágenes aquí o haz clic en "Añadir Imágenes" para comenzar</div>`;
+            const state = { imageCount: 0 };
+
+            const resizeGridItem = (item) => {
+                const rowHeight = parseInt(window.getComputedStyle(mosaicoFotos).getPropertyValue('grid-auto-rows'));
+                const rowGap = parseInt(window.getComputedStyle(mosaicoFotos).getPropertyValue('grid-row-gap'));
+                const itemHeight = item.querySelector('img').getBoundingClientRect().height;
+                const rowSpan = Math.ceil((itemHeight + rowGap) / (rowHeight + rowGap));
+                item.style.gridRowEnd = 'span ' + rowSpan;
+            };
+
+            const resizeAllGridItems = () => {
+                const allItems = mosaicoFotos.querySelectorAll('.mosaico-item');
+                allItems.forEach(resizeGridItem);
+            };
+
+            const debounce = (func, delay) => {
+                let timeout;
+                return function(...args) {
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => func.apply(this, args), delay);
+                };
+            };
+            
+            const updateUIState = () => {
+                state.imageCount = mosaicoFotos.querySelectorAll('.mosaico-item').length;
+                contadorFotos.textContent = `${state.imageCount} imagen${state.imageCount !== 1 ? 'es' : ''}`;
+                const hasImages = state.imageCount > 0;
+                exportarFotosBtn.disabled = !hasImages;
+                limpiarTodoBtn.disabled = !hasImages;
+                if (!hasImages && !mosaicoFotos.querySelector('.mosaico-placeholder')) {
+                    mosaicoFotos.innerHTML = placeholderHTML;
+                } else if (hasImages) {
+                    mosaicoFotos.querySelector('.mosaico-placeholder')?.remove();
+                }
+            };
+            
+            const createImageElement = (imageDataUrl) => {
+                const div = document.createElement('div');
+                div.classList.add('mosaico-item');
+                div.dataset.imageData = imageDataUrl;
+
+                const img = document.createElement('img');
+                img.src = imageDataUrl;
+                img.onload = () => resizeGridItem(div);
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.classList.add('btn-eliminar');
+                // --- CAMBIO: Se elimina el emoji y se añade un aria-label ---
+                deleteBtn.innerHTML = ''; // El icono es ahora puro CSS
+                deleteBtn.setAttribute('aria-label', 'Eliminar imagen'); 
+
+                div.appendChild(img);
+                div.appendChild(deleteBtn);
+                mosaicoFotos.appendChild(div);
+            };
+
+            const handleFiles = (files) => {
+                if (files.length > 0) {
+                   mosaicoFotos.querySelector('.mosaico-placeholder')?.remove();
+                }
+                for (const file of files) {
+                    if (!file.type.startsWith('image/')) continue;
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        createImageElement(e.target.result);
+                        updateUIState();
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+
+            new Sortable(mosaicoFotos, {
+                animation: 150,
+                ghostClass: 'sortable-ghost',
+                draggable: '.mosaico-item'
+            });
+
+            const actualizarColumnas = (columnas) => {
+                const numValido = Math.max(2, Math.min(10, columnas));
+                mosaicoFotos.style.gridTemplateColumns = `repeat(${numValido}, 1fr)`;
+                resizeAllGridItems();
+            };
+            
+            actualizarColumnas(parseInt(numColumnasInput.value, 10));
+            updateUIState();
+
+            window.addEventListener('resize', debounce(resizeAllGridItems, 250));
+
+            numColumnasInput.addEventListener('input', () => {
+                const columnas = parseInt(numColumnasInput.value, 10);
+                if (!isNaN(columnas)) actualizarColumnas(columnas);
+            });
+
+            subirFotosInput.addEventListener('change', (e) => {
+                handleFiles(e.target.files);
+                subirFotosInput.value = '';
+            });
+
+            limpiarTodoBtn.addEventListener('click', () => {
+                if (confirm('¿Estás seguro de que quieres eliminar todas las imágenes?')) {
+                    mosaicoFotos.innerHTML = '';
+                    updateUIState();
+                }
+            });
+            
+            mosaicoFotos.addEventListener('click', (e) => {
+                if (e.target.closest('.btn-eliminar')) {
+                    e.target.closest('.mosaico-item').remove();
+                    updateUIState();
+                }
+            });
+
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                mosaicoFotos.addEventListener(eventName, e => {
+                    e.preventDefault(); e.stopPropagation();
+                }, false);
+            });
+            ['dragenter', 'dragover'].forEach(eventName => {
+                mosaicoFotos.addEventListener(eventName, () => mosaicoFotos.classList.add('drag-over'));
+            });
+            ['dragleave', 'drop'].forEach(eventName => {
+                mosaicoFotos.addEventListener(eventName, () => mosaicoFotos.classList.remove('drag-over'));
+            });
+            mosaicoFotos.addEventListener('drop', (e) => handleFiles(e.dataTransfer.files));
+            
+            exportarFotosBtn.addEventListener('click', async () => {
+                if (state.imageCount === 0) return alert('No hay imágenes para exportar.');
+                exportarFotosBtn.disabled = true;
+                exportarFotosBtn.textContent = 'Generando ZIP...';
+                try {
+                    const zip = new JSZip();
+                    const items = mosaicoFotos.querySelectorAll('.mosaico-item');
+                    items.forEach((item, index) => {
+                        const numero = (index + 1).toString().padStart(2, '0');
+                        const nuevoNombre = `${prefijoSelect.value}_${numero}.webp`;
+                        const imgData = item.dataset.imageData.split(',')[1];
+                        zip.file(nuevoNombre, imgData, { base64: true });
+                    });
+                    const contenidoZip = await zip.generateAsync({ type: "blob" });
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(contenidoZip);
+                    link.download = `exportacion_${prefijoSelect.value}.zip`;
+                    link.click();
+                    URL.revokeObjectURL(link.href);
+                    link.remove();
+                } catch (error) {
+                    console.error("Error al generar el ZIP:", error);
+                    alert("Hubo un error al generar el archivo ZIP.");
+                } finally {
+                    exportarFotosBtn.disabled = false;
+                    exportarFotosBtn.textContent = 'Exportar a .ZIP';
+                    updateUIState();
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
