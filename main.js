@@ -70,6 +70,20 @@ const galleryConfig = {
 // LÓGICA DE LA APLICACIÓN
 // =================================================================================
 
+// --- AÑADIDO ---
+// Función para aleatorizar el orden de los elementos del grid.
+function randomizeGrid() {
+    const grid = document.querySelector('.gallery-grid');
+    if (!grid) return;
+    const items = Array.from(grid.children);
+    for (let i = items.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [items[i], items[j]] = [items[j], items[i]];
+    }
+    // Vuelve a añadir los elementos ya barajados al contenedor.
+    items.forEach(item => grid.appendChild(item));
+}
+
 function generateImagePaths(config) {
     const paths = [];
     for (let i = 1; i <= config.count; i++) {
@@ -109,6 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const faqCloseButton = document.getElementById('faq-close-button');
     const filterContainer = document.getElementById('filter-container');
 
+    // Tu lógica original para la animación de inicio es perfecta, la mantenemos.
     let animationTriggered = false;
     const startAnimation = () => {
         if (animationTriggered) return;
@@ -137,9 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const imgElement = item.querySelector('img');
                 const videoElement = item.querySelector('video');
 
-                // Lógica condicional para manejar diferentes tipos de configuración
                 if (Array.isArray(config)) {
-                    // Si es un array, es la galería 'original' con fotos y videos
                     const mediaConfig = config[index];
                     if (mediaConfig) {
                         if (mediaConfig.type === 'video') {
@@ -157,7 +170,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         item.style.display = 'none';
                     }
                 } else {
-                    // Si no es un array, es una galería de solo fotos
                     const imagePath = generateImagePaths(config)[index];
                     if (imagePath) {
                         imgElement.src = imagePath;
@@ -170,6 +182,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
             });
+            
+            // --- AÑADIDO ---
+            // Justo aquí, después de cargar todo, llamamos a la función para barajar el grid.
+            randomizeGrid();
+
             galleryGrid.style.opacity = '1';
         }, 350);
     };
