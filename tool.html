@@ -232,12 +232,14 @@
             <label for="num-columnas">Columnas:</label>
             <input type="number" id="num-columnas" class="control-item" value="4" min="2" max="10">
 
+            <!-- INICIO: CAMBIO EN EL ORDEN Y SELECCIÓN DEL SELECTOR -->
             <select id="prefijo" class="control-item">
-                <option value="el">el</option>
+                <option value="grid" selected>grid</option>
                 <option value="ella">ella</option>
+                <option value="el">el</option>
                 <option value="detalles">detalles</option>
-                <option value="grid">grid</option>
             </select>
+            <!-- FIN: CAMBIO EN EL ORDEN Y SELECCIÓN DEL SELECTOR -->
             
             <button id="exportar-fotos" class="control-item">Exportar a .ZIP</button>
             <button id="limpiar-todo" class="control-item">Limpiar Todo</button>
@@ -393,7 +395,6 @@
                     const items = mosaicoFotos.querySelectorAll('.mosaico-item');
                     items.forEach((item, index) => {
                         const numero = (index + 1).toString().padStart(2, '0');
-                        // CAMBIO: Se elimina el guion bajo "_" del nombre del archivo
                         const nuevoNombre = `${prefijoSelect.value}${numero}.webp`;
                         const imgData = item.dataset.imageData.split(',')[1];
                         zip.file(nuevoNombre, imgData, { base64: true });
@@ -405,7 +406,8 @@
                     link.click();
                     URL.revokeObjectURL(link.href);
                     link.remove();
-                } catch (error) {
+                } catch (error)
+                 {
                     console.error("Error al generar el ZIP:", error);
                     alert("Hubo un error al generar el archivo ZIP.");
                 } finally {
