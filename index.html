@@ -47,16 +47,17 @@
         
         #menu-fixed { position: fixed; top: 130px; right: 30px; z-index: 101; transform: rotate(90deg); transform-origin: top right; font-family: 'Anton', sans-serif; font-size: 22px; text-transform: uppercase; letter-spacing: 2px; color: #ffffff; text-decoration: none; mix-blend-mode: difference; opacity: 0; transition: opacity 1s ease 0.5s, letter-spacing 0.3s ease; }
         #contact-fixed { position: fixed; bottom: 10px; right: 30px; z-index: 101;  transform: rotate(90deg); transform-origin: top right; font-family: 'Anton', sans-serif; font-size: 22px; text-transform: uppercase; letter-spacing: 2px; color: #ffffff; text-decoration: none; mix-blend-mode: difference; opacity: 0; transition: opacity 1s ease 0.5s, letter-spacing 0.3s ease; }
-        #filter-container { position: fixed; bottom: 30px; left: 30px; z-index: 102; display: flex; align-items: center; color: #ffffff; opacity: 0; transition: opacity 1s ease 0.5s; }
-
-        /* REGLA AGRUPADA PARA MOSTRAR LOS BOTONES */
-        #menu-fixed.visible,
-        #contact-fixed.visible,
-        #filter-container.visible {
-            opacity: 1;
+        
+        /* Contenedor principal del filtro */
+        #filter-container { 
+            position: fixed; 
+            bottom: 30px; 
+            left: 30px; 
+            z-index: 102; 
+            opacity: 0; 
+            transition: opacity 1s ease 0.5s;
+            position: relative; 
         }
-
-        #menu-fixed:hover, #contact-fixed:hover { letter-spacing: 4px; }
 
         #menu-overlay, #contact-overlay, #faq-overlay { position: fixed; top: 0; width: 100%; height: 100%; background-color: #ffffff; z-index: 200; transition: transform 0.8s cubic-bezier(0.86, 0, 0.07, 1); }
         #menu-overlay { left: 0; transform: translateX(100%); }
@@ -68,21 +69,66 @@
         #contact-close-button, #faq-close-button { bottom: 10px; }
         #menu-close-button:hover, #contact-close-button:hover, #faq-close-button:hover { letter-spacing: 4px; }
 
-        #filter-button { font-family: 'Anton', sans-serif; font-size: 90px; line-height: 1; user-select: none; cursor: pointer; text-decoration: none; transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1), letter-spacing 0.3s ease; }
+        /* === LA SOLUCIÓN ESTÁ AQUÍ === */
+        #filter-button { 
+            font-family: 'Anton', sans-serif; 
+            font-size: 90px; 
+            line-height: 1; 
+            user-select: none; 
+            cursor: pointer; 
+            text-decoration: none; 
+            transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1), letter-spacing 0.3s ease; 
+            z-index: 2; 
+            position: relative;
+            /* Se le asigna el color base blanco */
+            color: #ffffff;
+            /* Y el modo 'difference' para que contraste con cualquier fondo */
+            mix-blend-mode: difference; 
+        }
         #filter-button:hover { letter-spacing: 6px; }
-        #filter-button.active { transform: rotate(45deg); }
-        #filter-menu { list-style: none; padding: 0; margin: 0; margin-left: 35px; opacity: 0; transform: translateX(-30px); pointer-events: none; transition: opacity 0.4s ease, transform 0.4s ease, background-color 0.4s ease; }
+        #filter-button.active { transform: rotate(405deg); }
+        
+        #filter-menu { 
+            list-style: none; 
+            padding: 20px; 
+            margin: 0; 
+            opacity: 0; 
+            transform: translateX(-30px); 
+            pointer-events: none; 
+            background-color: rgba(255, 255, 255, 0.5); 
+            border-radius: 0px; 
+            position: absolute;
+            left: 125px; 
+            bottom: 0; 
+            transition: opacity 0.4s ease, transform 0.4s ease, background-color 0.1s linear; 
+        }
         #filter-menu.open { 
             opacity: 1; 
             transform: translateX(0); 
             pointer-events: auto; 
-            background-color: rgba(255, 255, 255, 0.5); 
-            padding: 20px; 
-            border-radius: 0px; 
+            transition: opacity 0.4s ease 0.1s, transform 0.4s ease 0.1s, background-color 0.4s ease;
         }
-        #filter-menu li { margin-bottom: 10px; }
+
+        /* REGLA AGRUPADA PARA MOSTRAR LOS BOTONES */
+        #menu-fixed.visible,
+        #contact-fixed.visible,
+        #filter-container.visible {
+            opacity: 1;
+        }
+        #menu-fixed:hover, #contact-fixed:hover { letter-spacing: 4px; }
+
+        #filter-menu li { margin-bottom: 2px; }
         #filter-menu li:last-child { margin-bottom: 0; }
-        #filter-menu li a { font-family: 'Anton', sans-serif; font-size: 22px; text-transform: uppercase; letter-spacing: 2px; text-decoration: none; color: #000000; transition: letter-spacing 0.3s ease; }
+        #filter-menu li a { 
+            font-family: 'Anton', sans-serif; 
+            font-size: 56px;
+            line-height: 1;
+            text-transform: uppercase; 
+            letter-spacing: 2px; 
+            text-decoration: none; 
+            color: #000000; 
+            transition: letter-spacing 0.3s ease; 
+        }
         #filter-menu li a:hover { letter-spacing: 4px; }
     </style>
 </head>
@@ -97,7 +143,6 @@
 
     <div id="photo-gallery">
         <div class="gallery-grid">
-            <div class="gallery-item"><img src="" alt=""><video src="" muted autoplay loop playsinline style="display: none;"></video></div><div class="gallery-item"><img src="" alt=""><video src="" muted autoplay loop playsinline style="display: none;"></video></div><div class="gallery-item"><img src="" alt=""><video src="" muted autoplay loop playsinline style="display: none;"></video></div>
             <div class="gallery-item"><img src="" alt=""><video src="" muted autoplay loop playsinline style="display: none;"></video></div><div class="gallery-item"><img src="" alt=""><video src="" muted autoplay loop playsinline style="display: none;"></video></div><div class="gallery-item"><img src="" alt=""><video src="" muted autoplay loop playsinline style="display: none;"></video></div>
             <div class="gallery-item"><img src="" alt=""><video src="" muted autoplay loop playsinline style="display: none;"></video></div><div class="gallery-item"><img src="" alt=""><video src="" muted autoplay loop playsinline style="display: none;"></video></div><div class="gallery-item"><img src="" alt=""><video src="" muted autoplay loop playsinline style="display: none;"></video></div>
             <div class="gallery-item"><img src="" alt=""><video src="" muted autoplay loop playsinline style="display: none;"></video></div><div class="gallery-item"><img src="" alt=""><video src="" muted autoplay loop playsinline style="display: none;"></video></div><div class="gallery-item"><img src="" alt=""><video src="" muted autoplay loop playsinline style="display: none;"></video></div>
