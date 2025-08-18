@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Organizador de Fotos para grid</title>
+    <title>Organizador de Fotos (Diseño Unificado)</title>
 
     <!-- 1. ESTILOS CSS -->
     <style>
@@ -51,57 +51,92 @@
             flex-wrap: wrap;
         }
 
-        .controles label, .controles input, .controles select, .controles button {
+        /* --- INICIO: NUEVO DISEÑO UNIFICADO DE CONTROLES --- */
+
+        /* Clase base para todos los elementos de control */
+        .control-item {
             font-size: 16px;
             padding: 10px 15px;
             border-radius: 5px;
             border: 1px solid var(--border-color);
             background-color: var(--background-light);
-        }
-
-        .controles label {
-            border: none;
-            padding-right: 0;
-            background-color: transparent;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            -webkit-appearance: none; /* Resetea estilos nativos en iOS */
+            moz-appearance: none;
+            appearance: none;
         }
         
-        .controles input[type="number"] {
+        /* Efecto hover para los controles estándar */
+        .control-item:not(#exportar-fotos):not(#limpiar-todo):hover {
+            background-color: #e9ecef;
+            border-color: #c1c7d0;
+        }
+
+        /* Efecto hover para el botón de exportar (acción principal) */
+        #exportar-fotos:hover:not(:disabled) {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+        
+        /* Efecto hover para el botón de limpiar (acción destructiva) */
+        #limpiar-todo:hover:not(:disabled) {
+            background-color: var(--danger-color);
+            border-color: var(--danger-color);
+            color: white;
+        }
+
+        /* Estilo para estado deshabilitado */
+        .control-item:disabled {
+            background-color: var(--background-light);
+            color: #a5adba;
+            cursor: not-allowed;
+            border-color: var(--border-color);
+        }
+
+        /* Indicador de foco para accesibilidad (navegación con teclado) */
+        .control-item:focus-visible {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(0, 82, 204, 0.3);
+        }
+        
+        /* El label 'Columnas:' no necesita estilo de botón */
+        label[for="num-columnas"] {
+            border: none;
+            background-color: transparent;
+            cursor: default;
+        }
+        
+        /* El input numérico necesita un cursor de texto */
+        input.control-item {
+            cursor: text;
+        }
+        
+        input[type="number"].control-item {
             width: 80px;
         }
-        
-        #subir-fotos-label {
-            cursor: pointer;
-            transition: background-color 0.2s;
+
+        /* Estilos para el select, incluyendo la flecha personalizada */
+        select.control-item {
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%235E6C84%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.4-12.8z%22%2F%3E%3C%2Fsvg%3E');
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: .65em auto;
+            padding-right: 40px; /* Espacio para la flecha */
         }
-        #subir-fotos-label:hover { background-color: #e9ecef; }
         
         input[type="file"] { display: none; }
-
-        .controles button {
-            color: white;
-            border: none;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        #exportar-fotos { background-color: var(--primary-color); }
-        #exportar-fotos:hover:not(:disabled) { background-color: var(--primary-hover-color); }
-
-        #limpiar-todo { background-color: var(--danger-color); }
-        #limpiar-todo:hover:not(:disabled) { background-color: var(--danger-hover-color); }
         
-        .controles button:disabled {
-            background-color: #a5adba;
-            cursor: not-allowed;
-        }
-
         #contador-fotos {
             font-size: 14px;
             color: var(--text-light);
-            background-color: transparent;
-            border: none;
             padding-left: 10px;
         }
+        /* --- FIN: NUEVO DISEÑO UNIFICADO DE CONTROLES --- */
+
 
         .mosaico {
             display: grid;
@@ -137,7 +172,6 @@
             vertical-align: middle;
         }
         
-        /* --- ESTILOS MEJORADOS PARA EL BOTÓN DE ELIMINAR (X) --- */
         .btn-eliminar {
             position: absolute;
             top: 8px;
@@ -164,26 +198,19 @@
             transform: scale(1.1);
         }
 
-        /* Las dos líneas que forman la "X" */
-        .btn-eliminar::before,
-        .btn-eliminar::after {
+        .btn-eliminar::before, .btn-eliminar::after {
             content: '';
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 14px; /* Ancho de la línea */
-            height: 2px;  /* Grosor de la línea */
+            width: 14px;
+            height: 2px;
             background-color: var(--text-dark);
             border-radius: 2px;
         }
 
-        .btn-eliminar::before {
-            transform: translate(-50%, -50%) rotate(45deg);
-        }
-
-        .btn-eliminar::after {
-            transform: translate(-50%, -50%) rotate(-45deg);
-        }
+        .btn-eliminar::before { transform: translate(-50%, -50%) rotate(45deg); }
+        .btn-eliminar::after { transform: translate(-50%, -50%) rotate(-45deg); }
         
         .sortable-ghost {
             opacity: 0.4;
@@ -207,24 +234,25 @@
 <body>
 
     <div class="container">
-        <h1>Organizador de Fotos para Grid)</h1>
+        <h1>Organizador de Fotos (Diseño Unificado)</h1>
 
         <div class="controles">
-            <label for="subir-fotos" id="subir-fotos-label">Añadir Imágenes (.webp, .jpg, .png)</label>
+            <!-- SE AÑADE LA CLASE .control-item a todos los elementos -->
+            <label for="subir-fotos" id="subir-fotos-label" class="control-item">Añadir Imágenes</label>
             <input type="file" id="subir-fotos" multiple accept="image/webp, image/jpeg, image/png">
             
             <label for="num-columnas">Columnas:</label>
-            <input type="number" id="num-columnas" value="4" min="2" max="10">
+            <input type="number" id="num-columnas" class="control-item" value="4" min="2" max="10">
 
-            <select id="prefijo">
+            <select id="prefijo" class="control-item">
                 <option value="el">el</option>
                 <option value="ella">ella</option>
                 <option value="detalles">detalles</option>
                 <option value="grid">grid</option>
             </select>
             
-            <button id="exportar-fotos">Exportar a .ZIP</button>
-            <button id="limpiar-todo">Limpiar Todo</button>
+            <button id="exportar-fotos" class="control-item">Exportar a .ZIP</button>
+            <button id="limpiar-todo" class="control-item">Limpiar Todo</button>
             <span id="contador-fotos">0 imágenes</span>
         </div>
 
@@ -237,7 +265,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
-    <!-- 3. LÓGICA DE JAVASCRIPT -->
+    <!-- 3. LÓGICA DE JAVASCRIPT (sin cambios) -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const subirFotosInput = document.getElementById('subir-fotos');
@@ -295,8 +323,6 @@
 
                 const deleteBtn = document.createElement('button');
                 deleteBtn.classList.add('btn-eliminar');
-                // --- CAMBIO: Se elimina el emoji y se añade un aria-label ---
-                deleteBtn.innerHTML = ''; // El icono es ahora puro CSS
                 deleteBtn.setAttribute('aria-label', 'Eliminar imagen'); 
 
                 div.appendChild(img);
