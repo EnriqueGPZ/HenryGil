@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FAQ - Henry Gil</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
         body, html {
@@ -31,17 +31,55 @@
         .faq-item:first-child {
             padding-top: 0;
         }
-        .faq-item h2 {
+        .faq-question {
             font-size: 1.5rem; font-weight: 700;
-            margin: 0 0 15px 0;
-        }
-        .faq-item p {
             margin: 0;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            -webkit-tap-highlight-color: transparent; /* Evita el flash azul en móviles */
+        }
+        .faq-question::after {
+            content: '+';
+            font-size: 2rem;
+            font-weight: 300;
+            transition: transform 0.3s ease;
+        }
+        .faq-question.active::after {
+            content: '−';
+            transform: rotate(180deg);
+        }
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out;
+        }
+        .faq-answer-content {
+            padding-top: 20px;
+        }
+        .faq-answer p {
+            margin: 0 0 1em 0;
             color: #a0a0a0;
+        }
+        .faq-answer p:last-child {
+            margin-bottom: 0;
+        }
+        .faq-answer ul {
+            padding-left: 20px;
+            margin: 0 0 1em 0;
+            color: #a0a0a0;
+        }
+        .faq-answer li {
+            margin-bottom: 10px;
+        }
+        .faq-answer li strong {
+            color: #ffffff;
+            font-weight: 400;
         }
         @media (max-width: 900px) {
             h1 { font-size: 12vw; }
-            .faq-item h2 { font-size: 1.2rem; }
+            .faq-question { font-size: 1.2rem; }
         }
     </style>
 </head>
@@ -50,20 +88,62 @@
         <h1>Preguntas Frecuentes</h1>
         
         <div class="faq-item">
-            <h2>¿Cuál es tu estilo de fotografía?</h2>
-            <p>Mi estilo es principalmente documental y artístico. Busco capturar momentos reales y emociones genuinas sin intervenir demasiado, creando un recuerdo atemporal y cinematográfico de vuestro día.</p>
+            <h2 class="faq-question">¿Cómo es una boda con Henry G.?</h2>
+            <div class="faq-answer">
+                 <div class="faq-answer-content">
+                    <p>Olvídate de posar. El día de tu boda no es una sesión de fotos, es una fiesta. Y mi trabajo es ser uno más, un invitado con cámaras que sabe exactamente dónde mirar para capturar la magia.</p>
+                    <p>Me verás en la pista de baile, mezclándome con tu gente, buscando esa conexión real que no se puede forzar. Seré esa voz tranquila que te recordará: "parad un segundo, respira, mira a tu alrededor". Porque esos instantes de calma en mitad del huracán son oro puro.</p>
+                    <p>Sé que habéis invertido vuestro corazón en este día. Mi forma de honrarlo es devolvéroslo en forma de recuerdos que os hagan sentirlo todo de nuevo. Al final, no tendréis solo fotos bonitas. Tendréis la historia real y sin filtros de vuestro día: la locura, la alegría, las lágrimas y cada momento imperfectamente perfecto.</p>
+                </div>
+            </div>
         </div>
 
         <div class="faq-item">
-            <h2>¿Viajas para hacer bodas?</h2>
-            <p>¡Absolutamente! Me encanta viajar y contar historias en lugares nuevos. Estoy disponible para bodas en toda España y en el extranjero. Los gastos de desplazamiento y alojamiento se detallan de forma transparente en el presupuesto.</p>
+            <h2 class="faq-question">Entonces, ¿toda esa naturalidad es improvisada?</h2>
+            <div class="faq-answer">
+                <div class="faq-answer-content">
+                    <p>¡No del todo! Para conseguir que el día de la boda todo fluya y vosotros solo os preocupéis de disfrutar, hay un trabajo previo que es fundamental.</p>
+                    <p>Este es nuestro secreto:</p>
+                    <ul>
+                        <li><strong>Creamos un 'moodboard' juntos:</strong> Es nuestra hoja de ruta creativa. Así nos aseguramos de que hablamos el mismo idioma visual y de que el resultado final es exactamente lo que soñáis.</li>
+                        <li><strong>Cazamos la luz perfecta:</strong> Me coordino con tu wedding planner (o con vosotros) para estudiar los espacios y los tiempos. Buscamos los mejores rincones y esos momentos mágicos, como el atardecer, para aprovecharlos al máximo.</li>
+                        <li><strong>Mi experiencia, a vuestro servicio:</strong> Llevo más de 10 años viviendo bodas. Usaré todo lo que he aprendido para guiaros, daros ideas y asegurar que cada detalle sume para crear imágenes auténticas, sin nada forzado.</li>
+                        <li><strong>Visitamos las localizaciones:</strong> Antes del gran día, vamos a los lugares clave. Hacemos pruebas, medimos la luz y lo planificamos todo para que no haya sorpresas.</li>
+                    </ul>
+                    <p>En resumen: planifico hasta el último detalle para que, llegado el día, todo parezca pura magia espontánea. Esa es la diferencia.</p>
+                </div>
+            </div>
         </div>
 
         <div class="faq-item">
-            <h2>¿Cuándo recibiremos nuestras fotos?</h2>
-            <p>Recibiréis una pequeña galería de avance en la primera semana tras la boda. La galería completa y editada con la máxima calidad se entrega en un plazo máximo de 8 a 12 semanas, dependiendo de la temporada.</p>
+            <h2 class="faq-question">¿Viajas para hacer bodas?</h2>
+            <div class="faq-answer">
+                 <div class="faq-answer-content">
+                    <p>¡Absolutamente! Me encanta viajar y contar historias en lugares nuevos. Estoy disponible para bodas en toda España y en el extranjero. Los gastos de desplazamiento y alojamiento se detallan de forma transparente en el presupuesto.</p>
+                </div>
+            </div>
         </div>
         
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const faqQuestions = document.querySelectorAll('.faq-question');
+
+            faqQuestions.forEach(question => {
+                question.addEventListener('click', () => {
+                    const answer = question.nextElementSibling;
+                    question.classList.toggle('active');
+
+                    if (answer.style.maxHeight) {
+                        answer.style.maxHeight = null;
+                    } else {
+                        answer.style.maxHeight = answer.scrollHeight + "px";
+                    }
+                });
+            });
+        });
+    </script>
+
 </body>
 </html>
